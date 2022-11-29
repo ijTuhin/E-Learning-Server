@@ -15,25 +15,29 @@ app.use(express.json());
 const uri = "mongodb+srv://dbuser:s5qpYxyO6JvdKBk1@cluster0.hfup90w.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function run(){
-    try{
+async function run() {
+    try {
         await client.connect();
         const userCollection = client.db("elearning").collection("users");
-        const user = {name: 'my name', email:'email@acc.com'};
-        const result = await userCollection.insertOne(user);
-        console.log('user inserted');
+
+        app.post('/user', (req, res) => {
+            const newUser = req.body;
+            console.log('User:  ', newUser)
+            res.send({result: 'Data post'});
+        });
+
     }
-    finally{
+    finally {
         //
     }
 }
 
 run().catch(console.dir);
 
-
 app.get('/', (req,res) => {
     res.send('Running');
 });
+
 
 app.listen(port, () => {
     console.log('Server running');
