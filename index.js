@@ -19,11 +19,34 @@ async function run() {
     try {
         await client.connect();
         const userCollection = client.db("elearning").collection("users");
+        const buycourseCollection = client.db("elearning").collection("buycourse");
+        const courseCollection = client.db("elearning").collection("courses");
+        const allcourseCollection = client.db("elearning").collection("allcourses");
 
-        app.post('/user', (req, res) => {
+        app.post('/user', async (req, res) => {
             const newUser = req.body;
-            console.log('User:  ', newUser)
-            res.send({result: 'Data post'});
+            console.log('User:  ', newUser);
+            const result = await userCollection.insertOne(newUser);
+            res.send(result);
+        });
+        app.post('/buycourse', async (req, res) => {
+            const newCourse = req.body;
+            console.log('User:  ', newCourse);
+            const result = await buycourseCollection.insertOne(newCourse);
+            res.send(result);
+        });
+
+        app.get('/allcourses', async (req,res) => {
+            const query = {};
+            const cursor = allcourseCollection.find(query);
+            const allcourses = await cursor.toArray();
+            res.send(allcourses);
+        });
+        app.get('/courses', async (req,res) => {
+            const query = {};
+            const cursor = courseCollection.find(query);
+            const courses = await cursor.toArray();
+            res.send(courses);
         });
 
     }
